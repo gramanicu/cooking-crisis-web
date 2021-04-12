@@ -1,3 +1,3 @@
-# Food Crisis Web Client
+# Cooking Crisis Web Client
 
-This is the web client for the Food Crisis game.
+This is the web client for the Cooking Crisis game.
