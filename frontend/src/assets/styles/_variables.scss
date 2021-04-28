@@ -1,0 +1,38 @@
+$white: #eaeaea;
+$primary: #08d9d6;
+$secondary: #252a34;
+$pink: #ff2e63;
+
+$font-family: "Roboto", sans-serif;
+
+
+//Mobile width
+$mobile_screen_width: 460px;
+
+/* 
+    Font sizes
+*/
+
+// Desktop
+
+$font_web_small_1: calc(3px + (24 - 3) * ((100vw - 480px) / (3840 - 480))); //12px
+$font_web_small_2: calc(4px + (32 - 4) * ((100vw - 480px) / (3840 - 480))); //16px
+$font_web_small_3: calc(5px + (40 - 5) * ((100vw - 480px) / (3840 - 480))); //20px
+$font_web_medium_1: calc(6px + (48 - 6) * ((100vw - 480px) / (3840 - 480))); //24px
+$font_web_medium_12: calc(8px + (64 - 9) * ((100vw - 480px) / (3840 - 480))); //32px
+$font_web_medium_2: calc(9px + (72 - 9) * ((100vw - 480px) / (3840 - 480))); //36px
+$font_web_medium_23: calc(10px +(80 - 12)*((100vw - 480px) / (3840 - 480)));//40px
+$font_web_medium_3: calc(12px + (96 - 12) * ((100vw - 480px) / (3840 - 480))); //48px
+$font_web_large_1: calc(13px + (104 - 13) * ((100vw - 480px) / (3840 - 480))); //52px
+$font_web_large_2: calc(14px + (112 - 14) * ((100vw - 480px) / (3840 - 200))); //56px
+$font_web_large_3: calc(16px + (128 - 16) * ((100vw - 480px) / (3840 - 480))); //64px
+
+// Mobile
+
+$font_mobile_1: calc(6px + (9 - 6) * ((100vw - 300px) / (480 - 300))); //8px
+$font_mobile_2: calc(9px + (14 - 9) * ((100vw - 300px) / (480 - 300))); //12px
+$font_mobile_3: calc(11px + (16 - 11) * ((100vw - 300px) / (480 - 300))); //14px
+$font_mobile_4: calc(12px + (19 - 12) * ((100vw - 300px) / (480 - 300))); //16px
+$font_mobile_425: calc(14px + (21 - 12) * ((100vw - 300px) / (480 - 300))); //18px
+$font_mobile_45: calc(18px + (25 - 18) * ((100vw - 300px) / (480 - 300))); //24px
+$font_mobile_5: calc(21px + (33 - 21) * ((100vw - 300px) / (480 - 300))); //28px
