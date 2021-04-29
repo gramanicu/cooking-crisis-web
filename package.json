@@ -1,11 +1,22 @@
 {
-  "name": "frontend",
+  "name": "cooking-crisis-web",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gramanicu/cooking-crisis-web.git"
+  },
+  "author": "Doxa Studios",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gramanicu/cooking-crisis-web/issues"
+  },
+  "homepage": "https://github.com/gramanicu/cooking-crisis-web#readme",
+  
   "dependencies": {
     "core-js": "^3.6.5",
     "vue": "^2.6.11",
@@ -26,5 +37,15 @@
     "> 1%",
     "last 2 versions",
     "not dead"
-  ]
+  ],
+  "prettier": {
+    "trailingComma": "es5",
+    "tabWidth": 4,
+    "semi": false,
+    "singleQuote": false
+  },
+  "engines": {
+    "node": "16.x",
+    "npm": "7.x"
+  }
 }
