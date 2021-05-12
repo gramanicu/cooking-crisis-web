@@ -4,21 +4,34 @@
         <div class="loginContainer">
             <v-text-field  class="username" v-model="usernameValue"  placeholder="Username" dark ></v-text-field>
             <v-text-field  class="password"  v-model="passwordValue" placeholder="Password" dark type="password"></v-text-field>
-            <v-btn class="loginButton" @click="show()" dark >login</v-btn>
+            <v-btn class="loginButton" @click="login()" dark >login</v-btn>
             <h1 v-if="isLogged">m-am logat</h1>
-            
         </div>
     </div>
 </template>
 
 
 <script>
+import vars from '@/assets/variables/_variables.js'
 export default {
     created() {
-        // DOM is not install
+        setTimeout(() => {
+            this.$http.get("https://cooking-crisis-api-dev.herokuapp.com/api/v1/users/status/Patrick123").then(resp => {
+                console.log(resp);
+            })
+        }, 500)
+        // DOM is not installed
     },
     mounted() {
+        if(localStorage.accessTokenUser) {
+            this.accessTokenUser = localStorage.accessTokenUser;
+        }
         // DOM is installed
+    },
+    watch: {
+        accessTokenUser(newName) {
+        localStorage.accessTokenUser = newName;
+        }
     },
     computed: {
         // cached functions
@@ -27,13 +40,32 @@ export default {
         return {
             usernameValue: "",
             passwordValue: "",
+            emailValue: "",
             isLogged: false,
+            accessTokenUser: "",
+            refTokenUser: "",
+
         }
     },
     methods: {
-        show() {
-            console.log(this.usernameValue + " name and " + this.passwordValue + " this is the password");
-            this.isLogged = true;
+        login() {
+            let obj = {
+                username: this.usernameValue,
+                password: this.passwordValue,
+            }
+            console.log(obj);
+            this.$http.post("https://cooking-crisis-api-dev.herokuapp.com/api/v1/users/signin", obj).then(response => {
+                this.usernameValue = response.body.jwt_access_token;
+                this.refTokenUser = response.body.jwt_refresh_token;
+                vars.userToken = this.usernameValue;
+                vars.refreshUserToken = this.refTokenUser;
+                console.log(vars);
+                if(this.usernameValue !== "") {
+                    this.isLogged = true;
+                    this.$router.push("/about");
+                }
+                console.log(this.isLogged)
+            })
         }
     },
     destroy() {
@@ -68,7 +100,10 @@ export default {
     max-width: 50%;
     margin: auto;
 }
-
+.email {
+    max-width: 50%;
+    margin: auto;
+}
 .loginButton {
     color: $pink !important;
     display: block;

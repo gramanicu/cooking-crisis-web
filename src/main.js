@@ -2,9 +2,11 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import vuetify from './plugins/vuetify';
+import VueResources from 'vue-resource'
+
 
 Vue.config.productionTip = false
-
+Vue.use(VueResources)
 new Vue({
   router,
   vuetify,
