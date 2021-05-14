@@ -11,33 +11,12 @@
 </template>
 
 <script>
-import vars from "@/assets/variables/_variables.js"
+import {signIn} from "@/services/api_user_public.js"
+
 export default {
     created() {
-        setTimeout(() => {
-            this.$http
-                .get(
-                    "https://cooking-crisis-api-dev.herokuapp.com/api/v1/users/status/Patrick123"
-                )
-                .then((resp) => {
-                    console.log(resp)
-                })
-        }, 500)
-        // DOM is not installed
     },
     mounted() {
-        if (localStorage.accessTokenUser) {
-            this.accessTokenUser = localStorage.accessTokenUser
-        }
-        // DOM is installed
-    },
-    watch: {
-        accessTokenUser(newName) {
-            localStorage.accessTokenUser = newName
-        },
-    },
-    computed: {
-        // cached functions
     },
     data() {
         return {
@@ -51,29 +30,18 @@ export default {
     },
     methods: {
         login() {
-            let obj = {
-                username: this.usernameValue,
-                password: this.passwordValue,
+            const response = signIn(this.usernameValue, this.passwordValue)
+            
+            this.usernameValue = response.body.jwt_access_token
+            this.refTokenUser = response.body.jwt_refresh_token
+            localStorage.setItem("jwt_access_token", response.body.jwt_access_token)
+            localStorage.setItem("jwt_refresh_token", response.body.jwt_refresh_token)
+                    
+            if (this.usernameValue !== "") {
+                this.isLogged = true
+                this.$router.push("/about")
             }
-            console.log(obj)
-            this.$http
-                .post(
-                    "https://cooking-crisis-api-dev.herokuapp.com/api/v1/users/signin",
-                    obj
-                )
-                .then((response) => {
-                    this.usernameValue = response.body.jwt_access_token
-                    this.refTokenUser = response.body.jwt_refresh_token
-                    vars.userToken = this.usernameValue
-                    vars.refreshUserToken = this.refTokenUser
-                    console.log(vars)
-                    localStorage.setItem("jwt_access_token", response.body.jwt_access_token)
-                    localStorage.setItem("jwt_refresh_token", response.body.jwt_refresh_token)
-                    if (this.usernameValue !== "") {
-                        this.isLogged = true
-                        this.$router.push("/about")
-                    }console.log(this.isLogged)
-                })
+            console.log(this.isLogged)
         },
     },
     destroy() {},
