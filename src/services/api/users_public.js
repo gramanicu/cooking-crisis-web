@@ -3,7 +3,7 @@
  */
 
 import axios from "axios"
-import { http_root } from "../assets/constants/_constants"
+import { http_root } from "../../assets/constants/_constants"
 
 const instance = axios.create({
     baseURL: http_root,
@@ -18,7 +18,7 @@ const instance = axios.create({
  */
 export async function getUserStatus(name) {
     try {
-        const res = await instance.get("users/status/" + name)
+        const res = await instance.get(`users/status/${name}`)
         return res.data.status
     } catch (err) {
         return 0
@@ -34,7 +34,7 @@ export async function getUserStatus(name) {
 export async function doesUserExist(name) {
     try {
         // If req fails, it will enter "catch"
-        await instance.get("users/exists/" + name)
+        await instance.get(`users/exists/${name}`)
         return true
     } catch {
         return false
@@ -50,7 +50,7 @@ export async function doesUserExist(name) {
  */
 export async function getAccessToken(refreshToken) {
     try {
-        const res = await instance.get("users/token/" + refreshToken)
+        const res = await instance.get(`users/token/${refreshToken}`)
 
         return {
             jwt_access_token: res.data.jwt_access_token,
@@ -69,7 +69,7 @@ export async function getAccessToken(refreshToken) {
  */
 export async function activateAccount(activation_token) {
     try {
-        await instance.get("users/token/" + activation_token)
+        await instance.get(`users/token/${activateAccount}`)
         return true
     } catch (err) {
         return false
