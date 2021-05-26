@@ -8,12 +8,12 @@
 
 
 <script>
-import vars from "@/assets/variables/_variables.js"
+
 export default {
+  async mounted() {
+        // DOM is installed
+    },
   data() {
-    return {
-      thisVars: vars
-    }
   }
 }
 </script>
