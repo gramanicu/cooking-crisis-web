@@ -38,21 +38,26 @@ export default {
         }
     },
     methods: {
-        login() {
-            //TO DO
+        async login() {
+            this.load = !this.load;
+            try {
+                const response = await signIn(this.usernameValue, this.passwordValue)
 
+                if(response != undefined) {
+                    if(!response.failed) {
+                        localStorage.setItem("jwt_access_token", response.jwt_access_token)
+                        localStorage.setItem("jwt_refresh_token", response.jwt_refresh_token)
 
-            //const response = signIn(this.usernameValue, this.passwordValue)
-            // this.usernameValue = response.body.jwt_access_token
-            // this.refTokenUser = response.body.jwt_refresh_token
-            // localStorage.setItem("jwt_access_token", response.body.jwt_access_token)
-            // localStorage.setItem("jwt_refresh_token", response.body.jwt_refresh_token)
-                    
-            // if (this.usernameValue !== "") {
-            //     this.isLogged = true
-            //     this.$router.push("/about")
-            // }
-            // console.log(this.isLogged)
+                        // Redirect
+                        this.$router.push("/main");
+                    } else {
+                        // TODO - wrong data message
+                    }
+                }
+            } catch (err) {
+                throw new Error(err)
+            }
+
             this.load = !this.load;
         },
         createAccount() {

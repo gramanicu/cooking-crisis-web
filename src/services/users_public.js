@@ -3,7 +3,7 @@
  */
 
 import axios from "axios"
-import { http_root } from '../assets/constants/_constants'
+import { http_root } from "../assets/constants/_constants"
 
 const instance = axios.create({
     baseURL: http_root,
@@ -90,13 +90,21 @@ export async function signIn(username, password) {
             password: password,
         })
 
-        return {
-            jwt_access_token: res.data.jwt_access_token,
-            jwt_refresh_token: res.data.jwt_refresh_token,
-            access_expiry: res.data.access_expiry,
+        if (res.data.res_status == "success") {
+            return {
+                jwt_access_token: res.data.jwt_access_token,
+                jwt_refresh_token: res.data.jwt_refresh_token,
+                access_expiry: res.data.access_expiry,
+            }
+        } else {
+            return {
+                failed: true,
+            }
         }
     } catch (err) {
-        return undefined
+        return {
+            failed: true,
+        }
     }
 }
 
