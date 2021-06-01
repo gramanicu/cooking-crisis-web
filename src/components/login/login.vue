@@ -13,6 +13,7 @@
                 <v-btn dark class="loginButton" :loading="load" @click="login()">login</v-btn>
                 <p class="signOutMessage">You dont have an account?</p>
                 <v-btn dark class="accountButton" @click="createAccount()" plain >create an account </v-btn>
+                <p class="fail" v-if="fail">Your username or password is wrong</p>
                 <v-btn dark class="forgotButton" @click="forgotPassword()" plain >cant sign in?</v-btn>
             </div>
         </div>
@@ -34,12 +35,14 @@ export default {
             isLogged: false,
             accessTokenUser: "",
             refTokenUser: "",
-            load: false
+            load: false,
+            fail: false, 
         }
     },
     methods: {
         async login() {
             this.load = !this.load;
+            this.fail =  false;
             try {
                 const response = await signIn(this.usernameValue, this.passwordValue)
 
@@ -52,6 +55,7 @@ export default {
                         this.$router.push("/main");
                     } else {
                         // TODO - wrong data message
+                        this.fail = true;
                     }
                 }
             } catch (err) {
@@ -148,7 +152,13 @@ export default {
 .forgotButton {
     position: absolute;
     color: $white;
-     right: 10%;
-     bottom: 10%;
+    right: 10%;
+    bottom: 10%;
+}
+.fail {
+    color: $blue;  
+    margin-top: 13%;
+    font-size: 20px !important;
+    text-align: center;
 }
 </style>
