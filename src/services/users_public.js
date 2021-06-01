@@ -3,7 +3,7 @@
  */
 
 import axios from "axios"
-import { http_root } from "../../assets/constants/_constants"
+import { http_root } from '../assets/constants/_constants'
 
 const instance = axios.create({
     baseURL: http_root,
