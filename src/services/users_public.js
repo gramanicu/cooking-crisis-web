@@ -97,14 +97,10 @@ export async function signIn(username, password) {
                 access_expiry: res.data.access_expiry,
             }
         } else {
-            return {
-                failed: true,
-            }
+            return undefined
         }
     } catch (err) {
-        return {
-            failed: true,
-        }
+        return undefined
     }
 }
 
