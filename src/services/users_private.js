@@ -23,6 +23,11 @@ export async function getAccountData(jwt_acc) {
                 Authorization: `Bearer ${jwt_acc}`,
             },
         })
+
+        if (res.data.res_status == "error") {
+            return undefined
+        }
+
         return res.data
     } catch (err) {
         return undefined
@@ -40,7 +45,7 @@ export async function getAccountData(jwt_acc) {
 export async function changePassword(jwt_acc, old_pwd, new_pwd) {
     try {
         // If req fails, it will enter "catch"
-        await instance.patch(
+        const res = await instance.patch(
             "users/password",
             {
                 old_password: old_pwd,
@@ -52,6 +57,11 @@ export async function changePassword(jwt_acc, old_pwd, new_pwd) {
                 },
             }
         )
+
+        if (res.data.res_status == "error") {
+            return false
+        }
+
         return true
     } catch {
         return false
@@ -65,10 +75,10 @@ export async function changePassword(jwt_acc, old_pwd, new_pwd) {
  * @param {String} jwt_ref The refresh token
  * @returns If the user was signed out
  */
-export async function changePassword(jwt_acc, jwt_ref) {
+export async function signOut(jwt_acc, jwt_ref) {
     try {
         // If req fails, it will enter "catch"
-        await instance.patch(
+        const res = await instance.patch(
             "users/signout",
             {
                 refresh_token: jwt_ref,
@@ -79,6 +89,11 @@ export async function changePassword(jwt_acc, jwt_ref) {
                 },
             }
         )
+
+        if (res.data.res_status == "error") {
+            return false
+        }
+
         return true
     } catch {
         return false
