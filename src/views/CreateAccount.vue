@@ -79,7 +79,7 @@ export default {
     margin: auto;
     margin-top: 5%;
     background-color: $blue !important; 
-    color: $pink;
+    color: $white;
     text-decoration: underline;
     text-decoration-thickness: 2px;
 }
