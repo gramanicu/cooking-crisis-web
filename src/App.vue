@@ -4,8 +4,7 @@
       <v-app-bar id="navbar" app dark>
         <div class="d-flex align-center">
           <v-img class="shrink mr-2" src="@/assets/images/cooking_crisis.png"  width="40"/>
-          <router-link class="homeButton" to="/main">Home</router-link>
-          <router-link class="logoutButton" to="/"> Log out . . . </router-link>
+          <router-link class="homeButton" to="/">Home</router-link>
         </div>
 
         <v-spacer></v-spacer>

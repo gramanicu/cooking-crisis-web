@@ -43,7 +43,7 @@ export async function getFriendList(jwt_acc) {
  */
 export async function sendFriendRequest(jwt_acc, username) {
     try {
-        const res = await instance.post(`friends/add/${username}`, {
+        const res = await instance.post(`friends/add/${username}`,{}, {
             headers: {
                 Authorization: `Bearer ${jwt_acc}`,
             },

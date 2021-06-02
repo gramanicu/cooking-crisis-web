@@ -8,21 +8,22 @@
                                 <img src="https://www.w3schools.com/howto/img_avatar.png">
                             </div>
                             <div class="cardContainer">
-                                <h3><b>{{user_info.name}}</b></h3> 
+                                <h3>{{user_info.name}}</h3> 
                                 <p>ELO:  {{user_info.elo}}</p> 
+                                <v-btn small dark class="signoutButton" @click="signout()">Sign Out</v-btn>
                             </div>
                         </div>           
                 </div>
 
                 <div class="notifications-container">
-
+                    {{notification.message}}
                 </div>
 
                 <div class="friend-container">
                     <vuescroll :ops="ops">
                         <div class="friend" v-for="(friend, index) in friendList" :key="index">
                             <div class="friendStatus">
-                                <h2 class="friend-info">  <v-icon class="friend-icon" large>mdi-account-circle </v-icon>   {{friend.name}} <span :class="{ text_size: true, on: friend.status === 'online' , offline: friend.status === 'offline' , busy: friend.status === 'busy', in_game: friend.status === 'in game'}"> <v-icon small :class="{ text_size: true, on: friend.status === 'online' , offline: friend.status === 'offline' , busy: friend.status === 'busy', in_game: friend.status === 'in game'}" >mdi-checkbox-blank-circle </v-icon> {{friend.status}}</span></h2>
+                                <h2 class="friend-info"><v-icon class="friend-icon" large>mdi-account-circle </v-icon>   {{friend.name}} <span :class="{ text_size: true, on: friend.status === 'online' , offline: friend.status === 'offline' , busy: friend.status === 'busy', in_game: friend.status === 'in game'}"> <v-icon small :class="{ text_size: true, on: friend.status === 'online' , offline: friend.status === 'offline' , busy: friend.status === 'busy', in_game: friend.status === 'in game'}" >mdi-checkbox-blank-circle </v-icon> {{friend.status}}</span></h2>
                             </div>
                             <div class="friendActions">
                                 <v-btn v-if="friend.status === 'online'" dark class="invite" plain> <v-icon class="friendChallange-icon" medium>mdi-cheese</v-icon> challenge!</v-btn>
@@ -34,8 +35,8 @@
 
             <div class="pageContent-container">
                 <div class="addFriend">
-                    <input  class="addFriendInput" type="text" placeholder="   Add friend...">
-                    <button>Add</button>
+                    <input  class="addFriendInput" type="text" v-model="friendToAdd" placeholder="   Add friend...">
+                        <button class="addFriendButton"  @click="sendFriendRequest()">Add</button>
                 </div>
                 <div class="menu">
                     <div class="menuButtonGroup">
@@ -83,14 +84,18 @@ export default {
         });
 
         // Reload the friend list every 15 seconds
-        this.timers.push(setInterval(() => {
+        this.timers.push(setInterval(function () {
             this.reloadFriendList()
-        }, 15000))
+        }.bind(this), 15000))
+
+        this.timers.push(setInterval(function() {
+            this.tickNotifications()
+        }.bind(this), 1000))
 
         const access_expiry = localStorage.getItem("access_expiry") * 0.9;
-        this.timers.push(setInterval(() => {
+        this.timers.push(setInterval(function() {
             this.refreshToken()
-        }, access_expiry * 1000))
+        }.bind(this), access_expiry * 1000))
 
         this.bkg_socket.on('connect', function () {
             console.log("Connected!")
@@ -100,10 +105,13 @@ export default {
         this.bkg_socket.on('notification', function (not) {
             console.log("Received a notification related to " + not.category)
             console.log("The notification is: " + not.message)
+            this.notification.message = not.message;
         }.bind(this))
 
         this.bkg_socket.on('pong', function (time) {
             console.log("Delay is " + (Date.now() - time) + "ms")
+            this.notification.message = "Delay is " + (Date.now() - time) + "ms";
+            this.notification.expiry = 5;
         }.bind(this))
     },
     beforeDestroy() {
@@ -113,7 +121,7 @@ export default {
     },
     data() {
         return {
-            leaderBoard:[],
+            friendToAdd: "",
             friendList:[
                 {
                     name: "Dave",
@@ -134,6 +142,10 @@ export default {
                 status: 0,
                 elo: 0,
                 created_at: ""
+            },
+            notification: {
+                message: "5 seconds",
+                expiry: 5,
             },
             bkg_socket: io(socket_root+"/backbone", {
                 path: "/sockets/",
@@ -165,12 +177,20 @@ export default {
         openAccountManagement() {
             this.$router.push("/account");
         },
-        async sendFriendRequest(name) {
+        tickNotifications() {
+            if(this.notification.expiry == 0) {
+                this.notification.message = ""
+            } else if(this.notification.expiry > 0) {
+                this.notification.expiry = this.notification.expiry - 1;
+            }
+        },
+        async sendFriendRequest() {
+            let name = this.friendToAdd
             const res = await sendFriendRequest(localStorage.getItem("jwt_access_token"), name)
             if(res == true) {
-                // Success
+                this.friendToAdd = ""
             } else {
-                // Couldn't send request
+                this.friendToAdd = "Failed"
             }
         },
 
@@ -185,7 +205,7 @@ export default {
         },
 
         async signout() {
-            const res = await signOut(localStorage.getItem("jwt_access_token"));
+            const res = await signOut(localStorage.getItem("jwt_access_token"),localStorage.getItem("jwt_refresh_token"));
             if(res == true) {
                 localStorage.removeItem("jwt_access_token")
                 localStorage.removeItem("jwt_refresh_token")
@@ -210,7 +230,7 @@ export default {
                         });
                     }
                 } else {
-                    this.$router.push("/validate");
+                    this.$router.push("/");
                 }
             })
         }
@@ -226,7 +246,6 @@ export default {
 .container {
     position:relative;
     margin: auto;
-    margin-top: 5%;
     width: 70vw;
     height: 80vh;
 }
@@ -253,6 +272,11 @@ export default {
     height: 10%;
     background-color: rgba(252, 252, 252, 0.075);
     border: rgba(167, 199, 202, 0.363) dotted;
+    text-align: left;
+    padding-left: 12px;
+    vertical-align: middle;
+    line-height: 50px;   
+    color: $white;
 }
 
 
@@ -336,9 +360,6 @@ export default {
     height: 10%;
     background: rgba(167, 199, 202, 0.274);
     margin-left: 7%;
-}
-
-.addFriend {
     margin-top: 3%;
     display: flex;
     justify-content: center;
@@ -354,6 +375,7 @@ export default {
 .addFriendButton {
     position: relative;
     width: 20%;
+    height: 60%;
     background-color: $blue;
     color: $white;
     text-align: center;
@@ -362,12 +384,12 @@ export default {
     margin-left: 30px;
     display: block;
     outline-width: 0;
-    font-size: 30px;
+    font-size: 20px;
 }
 
 .addFriendInput {
     position: relative;
-    width: 70%;
+    width: 50%;
     height: 70%;
     font-size: 30px;
     color: rgba(167, 199, 202, 0.827);
@@ -489,7 +511,7 @@ export default {
   width: 50%;
   padding: 2px 16px;
   float: left;
-  padding-top: 15%;
+  padding-top: 3%;
   padding-left: 10%;
 }
 
