@@ -81,15 +81,12 @@ export default {
                 const response = await signIn(this.usernameValue, this.passwordValue)
 
                 if(response != undefined) {
-                    if(!response.failed) {
-                        localStorage.setItem("jwt_access_token", response.jwt_access_token)
-                        localStorage.setItem("jwt_refresh_token", response.jwt_refresh_token)
+                    localStorage.setItem("jwt_access_token", response.jwt_access_token)
+                    localStorage.setItem("jwt_refresh_token", response.jwt_refresh_token)
+                    localStorage.setItem("access_expiry", response.access_expiry)
 
-                        // Redirect
-                        this.$router.push("/main");
-                    } else {
-                        this.fail = true
-                    }
+                    // Redirect
+                    this.$router.push("/main");
                 } else {
                     this.fail = true
                 }

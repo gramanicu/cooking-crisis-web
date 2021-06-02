@@ -31,7 +31,7 @@
 
 <script>
 import vuescroll from 'vuescroll'
-import { getAccountData } from "../services/users_private"
+import { getAccountData, signOut } from "../services/users_private"
 import {getUserStatus, getAccessToken} from "../services/users_public"
 // import {} from "../services/cards"
 import {user_status} from "../assets/constants/_constants"
@@ -57,6 +57,16 @@ export default {
             }
         });
 
+        // Reload the friend list every 15 seconds
+        this.timers.push(setInterval(() => {
+            this.reloadFriendList()
+        }, 15000))
+
+        const access_expiry = localStorage.getItem("access_expiry") * 0.9;
+        this.timers.push(setInterval(() => {
+            this.refreshToken()
+        }, access_expiry))
+
         this.bkg_socket.on('connect', function () {
             console.log("Connected!")
             this.bkg_socket.emit("ping", Date.now())
@@ -71,16 +81,14 @@ export default {
             console.log("Delay is " + (Date.now() - time) + "ms")
         }.bind(this))
     },
+    beforeDestroy() {
+        this.timers.forEach(timer => {
+            clearInterval(timer);
+        });
+    },
     data() {
         return {
-            leaderBoard:[
-                {
-                    name: "JOHN",
-                    wins: 6
-                }
-            ],
-
-
+            leaderBoard:[],
             friendList:[],
             user_info: {
                 name: "",
@@ -101,6 +109,7 @@ export default {
                     token: localStorage.getItem("jwt_access_token")
                 }
             }),
+            timers: [],
             ops: {
                 vuescroll: {},
                 scrollPanel: {},
@@ -121,6 +130,27 @@ export default {
                 // Success
             } else {
                 // Couldn't send request
+            }
+        },
+
+        async refreshToken() {
+            const ref_token = localStorage.getItem("jwt_access_token");
+            const data = await getAccessToken(ref_token)
+
+            if(data != undefined) {
+                localStorage.setItem("jwt_access_token", data.jwt_access_token)
+                localStorage.setItem("access_expiry", data.access_expiry)
+            }
+        },
+
+        async signout() {
+            const res = await signOut(localStorage.getItem("jwt_access_token"));
+            if(res == true) {
+                localStorage.removeItem("jwt_access_token")
+                localStorage.removeItem("jwt_refresh_token")
+                localStorage.removeItem("access_expiry")
+                this.bkg_socket.disconnect();
+                this.$router.push("/");
             }
         },
 
