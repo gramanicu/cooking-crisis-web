@@ -65,7 +65,7 @@ export default {
         const access_expiry = localStorage.getItem("access_expiry") * 0.9;
         this.timers.push(setInterval(() => {
             this.refreshToken()
-        }, access_expiry))
+        }, access_expiry * 1000))
 
         this.bkg_socket.on('connect', function () {
             console.log("Connected!")
@@ -134,7 +134,7 @@ export default {
         },
 
         async refreshToken() {
-            const ref_token = localStorage.getItem("jwt_access_token");
+            const ref_token = localStorage.getItem("jwt_refresh_token");
             const data = await getAccessToken(ref_token)
 
             if(data != undefined) {

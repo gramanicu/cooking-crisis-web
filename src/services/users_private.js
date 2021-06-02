@@ -40,9 +40,10 @@ export async function getAccountData(jwt_acc) {
  * @param {String} jwt_acc The access token
  * @param {String} old_pwd The old password
  * @param {String} new_pwd The new password
+ * @param {String} rep_pwd The new password repeated
  * @returns If the password was changed
  */
-export async function changePassword(jwt_acc, old_pwd, new_pwd) {
+export async function changePassword(jwt_acc, old_pwd, new_pwd, rep_pwd) {
     try {
         // If req fails, it will enter "catch"
         const res = await instance.patch(
@@ -50,6 +51,7 @@ export async function changePassword(jwt_acc, old_pwd, new_pwd) {
             {
                 old_password: old_pwd,
                 new_password: new_pwd,
+                repeated_password: rep_pwd,
             },
             {
                 headers: {

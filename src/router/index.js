@@ -6,6 +6,8 @@ import ForgotPassword from "../views/ForgotPassword.vue"
 import Validate from "../views/Validate.vue"
 import Main from "../views/MainPage.vue"
 import ActivateAccount from "../views/ActivateAccount.vue"
+import ManageAccount from "../views/ManageAccount.vue"
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -38,6 +40,11 @@ const routes = [
         path: "/main",
         name: "Main",
         component: Main,
+    },
+    {
+        path: "/account",
+        name: "Account",
+        component: ManageAccount,
     },
 ]
 
