@@ -4,7 +4,8 @@
       <v-app-bar id="navbar" app dark>
         <div class="d-flex align-center">
           <v-img class="shrink mr-2" src="@/assets/images/cooking_crisis.png"  width="40"/>
-          <router-link class="homeButton" to="/">Home</router-link>
+          <router-link class="homeButton" to="/main">Home</router-link>
+          <router-link class="logoutButton" to="/"> Log out . . . </router-link>
         </div>
 
         <v-spacer></v-spacer>
@@ -47,6 +48,24 @@ export default {
     font-size: 1.4em;
     font-weight: bold;
     text-decoration: none;
+  }
+
+  .homeButton:hover{
+    color: rgb(233, 233, 233) !important;
+  }
+
+  .logoutButton {
+    position: absolute;
+    right: 0;
+    color: white !important;
+    font-size: 1.4em;
+    font-weight: bold;
+    text-decoration: none;
+    margin-right: 10%;
+  }
+
+    .logoutButton:hover{
+    color: rgb(233, 233, 233) !important;
   }
   
 

@@ -1,27 +1,57 @@
 <template>
     <div id="main">
         <div class="container">
-            <div class="profile-container">
-                <h1 class="username-title" >{{user_info.name}}</h1>
-                <h2 class="profile-elo-number">ELO: {{user_info.elo}}</h2>
-                <v-icon class="cute-icon" x-large color="black">mdi-account-circle </v-icon>
+            <div class="navbar-container">
+
+                <div class="profile-container">
+                    
+                        <div class="card">
+                            <div class="cardImg">
+                                <img src="https://www.w3schools.com/howto/img_avatar.png">
+                            </div>
+                            <div class="cardContainer">
+                                <h3><b>{{user_info.name}}</b></h3> 
+                                <p>ELO:  {{user_info.elo}}</p> 
+                            </div>
+                        </div>
+                    
+                </div>
+
+                <div class="notifications-container">
+
+                </div>
+
+                <div class="friend-container">
+                    <vuescroll :ops="ops">
+                        <div class="friend" v-for="(friend, index) in friendList" :key="index">
+
+                            <div class="friendStatus">
+                                <h2 class="friend-info">  <v-icon class="friend-icon" large>mdi-account-circle </v-icon>   {{friend.name}} <span :class="{ text_size: true, on: friend.status === 'online' , offline: friend.status === 'offline' , busy: friend.status === 'busy', in_game: friend.status === 'in game'}"> <v-icon small :class="{ text_size: true, on: friend.status === 'online' , offline: friend.status === 'offline' , busy: friend.status === 'busy', in_game: friend.status === 'in game'}" >mdi-checkbox-blank-circle </v-icon> {{friend.status}}</span></h2>
+                            </div>
+
+                            <div class="friendActions">
+                                <v-btn dark class="invite" plain> <v-icon class="friendChallange-icon" medium>mdi-cheese</v-icon> challenge!</v-btn>
+                            </div>
+                            
+                        </div>
+                    </vuescroll>
+                </div>
             </div>
-            <div class="friend-container">
-                <vuescroll :ops="ops">
-                    <div class="friends" v-for="(friend, index) in friendList" :key="index">
-                        <h2 class="friend-info">  <v-icon class="friend-icon" large>mdi-account-circle </v-icon>   {{friend.name}} <span :class="{ text_size: true, on: friend.status === 'online' , offline: friend.status === 'offline' , busy: friend.status === 'busy', in_game: friend.status === 'in game'}"> <v-icon small :class="{ text_size: true, on: friend.status === 'online' , offline: friend.status === 'offline' , busy: friend.status === 'busy', in_game: friend.status === 'in game'}" >mdi-checkbox-blank-circle </v-icon> {{friend.status}}</span></h2>
-                        <v-btn dark class="invite" plain> <v-icon medium>mdi-cheese</v-icon> challenge!</v-btn>
+
+            <div class="pageContent-container">
+                <div class="addFriend">
+                    <input  class="addFriendInput" type="text" placeholder="   Add friend...">
+                </div>
+                <div class="menu">
+                    <div class="menuButtonGroup">
+                        <button class="menuButton">Account management</button>
+                        <button class="menuButton">Leaderboard</button>
+                        <button class="menuButton">Matchmacking</button>
+                        <button class="menuButton">About Game</button>
                     </div>
-                </vuescroll>
+                </div>
             </div>
-            <div class="game-container">
-                <h1 class="leaderboard-title">Leaderboard</h1>
-                <vuescroll :ops="ops">
-                    <div class="leaderboard" v-for="(person, index) in leaderBoard" :key="index">
-                        <h2 class="leaderboard-info">{{person.name}} with {{person.wins}} wins</h2>
-                    </div>
-                </vuescroll>
-            </div>
+
         </div>
     </div>
 </template>
@@ -178,117 +208,307 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
+// ------------------------------------ Containers
+
+
 .container {
     position:relative;
     margin: auto;
-    margin-left: 13%;
+    margin-top: 5%;
     width: 70vw;
-    height: 100vh;
+    height: 80vh;
 }
 
-//profile
-.profile-container {
+
+.navbar-container {
+    position: relative;
+    height: 100%;
+    width: 30%;
+    float: left;
+}
+
+.pageContent-container {
+    position: relative;
+    height: 100%;
+    width: 67%;
+    float: left;
+    margin-left: 3%;
+}
+
+.notifications-container {
     margin-top: 3%;
-    margin-left: 16%;
-    width: 20%;
-    height: 350px;
-    background-color: $pink;
-    border-radius: 8% 8% 8% 8%;
-
-}
-.username-title {
-    color: $white;
-    text-align: center;
-    padding-top: 5%;
-}
-.profile-elo-number {
-    color: $white;
-    text-align: center;
-    padding-top: 5%;
-}
-.cute-icon {
-    font-size: 10vw !important;
-    padding-left: 13%;
-    color: $blue !important;
+    width: 100%;
+    height: 10%;
+    background-color: rgba(252, 252, 252, 0.075);
+    border: rgba(167, 199, 202, 0.363) dotted;
 }
 
 
-//friends
+.friend-container {
+    margin-top: 3%;
+    padding-top: 3%;
+    right: 16%;
+    background-color:   #3b414d;
+    border-radius:  10% 0% 0% 0%;
+    width: 100%;
+    height: 70%;
+    box-shadow: 5px 5px #88888823;
 
-.friends {
-    display: flex;
-    width: 100% !important;
-    height: 60%;
+
 }
+
+
+
+
+
+
+// ------------------------------------ Friend list
+
+
+.friend {
+    margin-top: 5%;
+    margin-right: 5%;
+    margin-left: 6%;
+    background-color: rgba(196, 188, 188, 0.39);
+    border-radius: 12% 0% 17% 0%;
+    padding-top: 2%;
+}
+
+.friendStatus {
+    height: 70%;
+    width: 100%;
+}
+
+.friendActions {
+    height: 30%;
+    width: 100%;
+    padding: 0;
+}
+
+.friendChallange-icon {
+    font-size: 1.3vw;
+
+}
+
+.friendActions button {
+    margin-left: 35%;
+    padding: 0px;
+    text-align: top
+}
+
 .friend-info {
     width: 100%;
-    font-size: 18px;
+    font-size: 15px;
     color: $white;
-    padding-top: 5%;
-    padding-left: 10%;
+    padding-top: 1%;
+    padding-left: 7%;
 }
 .friend-icon {
     color: inherit !important;
     padding-right: 2%;
 }
-.friend-container {
-    position: absolute;
-    top: 5%;
-    right: 16%;
-    width: 30%;
-    height: 350px;
-    background-color:   #282C35;
-    border-radius:  10% 0% 0% 0%;
-}
+
 .invite {
-    margin-top: 5%;
-    position: absolute;
     right: 0;
     color: $white !important;
+    font-size: 10px;
+    padding: 0px;
 }
 
-//leaderboard
 
-.game-container {
-    top: 45%;
-    right: 33%;
-    position: absolute;
-    width: 50%;
-    height: 305px;
-    background-color: #F9A602;
-    border-radius:  0 0 8% 8%;
+
+
+// ------------------------------------ Add friend search bar
+
+.addFriend {
+    width: 80%;
+    height: 10%;
+    background: rgba(167, 199, 202, 0.274);
+    margin-left: 7%;
 }
-.leaderboard-title {
+
+.addFriend {
+    margin-top: 3%;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    box-shadow: 11px 7px #888888;
+    border-radius: 5%;
+}
+
+.addFriend:focus {
+    border: dotted rgba(224, 211, 211, 0.63);
+
+}
+
+.addFriendInput {
+    position: relative;
+    width: 90%;
+    height: 70%;
+    font-size: 30px;
+    color: rgba(167, 199, 202, 0.827);
+    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-family: 'Courier New', Courier, monospace;
     text-align: center;
-    color: $white !important;
-    padding-top: 3%;
-}
-.leaderboard-info {
-    text-align: center;
-    color: $white !important;
-    padding-top: 4%;
-}
-
-.game-container .__vuescroll {
-    height: 70% !important;
-}
+    margin: auto;
+    display: block;
+    cursor:  copy !important;
+    outline-width: 0;
+    caret-color: rgb(233, 58, 140);
 
 
-//styles for status
-.text_size {
-    padding-left: 5px;
-    font-size: 15px;
 }
-.offline {
+
+.addFriendInput:focus {
+    font-family: 'Courier New', Courier, monospace;
+}
+
+
+// ------------------------------------ Menu
+
+.menu {
+    width: 80%;
+    height: 85%;
+    background: rgba(167, 199, 202, 0.827);
+    margin-top: 5%;
+    border-radius: 13%;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    margin-left: 7%;
+
+}
+
+
+.menuButtonGroup {
+    width: 70%;
+    margin: auto;
+    padding-top: 5%;
+
+}
+
+.menuButton {
+    width: 100%;
+    display: block;
+    background-color: rgba(240, 221, 226, 0.747);
+    font-size: 25px;
+    margin-bottom: 11%;
+    padding: 4%;
+    border-radius: 5%;
+    font-family: 'Courier New', Courier, monospace;
+    box-shadow: 5px 10px #888888;
+
+}
+
+.menuButton:hover {
+    background: rgba(240, 199, 210, 0.856);
+    color: #fff;
+}
+
+
+
+// ------------------------------------ Profile overview
+
+.profile-container {
+    margin-top: 3%;
+    width: 100%;
+    height: 20%;
+    background-color: $pink;
+    border-radius: 10%;
+
+}
+
+.profile-title {
+    height: 30%;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.profile-title h1 {
+    font-size: 120%;
+}
+
+.profile-elo {
+    height: 20%;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-elo h2 {
+    font-size: 80%;
+
+}
+
+.profile-picture {
+    height: 50%;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1%;
+}
+
+
+.username-title {
     color: $white;
 }
-.busy {
-    color: $red;
+
+.profile-elo-number {
+    color: $white;
 }
-.on {
-    color: $green;
+.cute-icon {
+    font-size: 3vw !important;
+    color: $blue !important;
 }
-.in_game {
-    color: $gold;
+
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  background-color: $pink;
+  transition: 0.3s;
+  width: 100%;
+  height: 100%;
 }
+
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  position: relative;
+}
+
+.cardContainer {
+  width: 50%;
+  padding: 2px 16px;
+  float: left;
+  padding-top: 15%;
+  padding-left: 10%;
+}
+
+.cardContainer h3 {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 23px;
+    color: rgb(66, 52, 52);
+}
+
+.cardContainer p {
+    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 12px;
+    color: rgb(0, 0, 0);
+    margin-left: 13%;
+
+}
+
+.cardImg {
+    width: 50%;
+    float: left;
+    height: 100%;
+}
+
+.cardImg img {
+    width: 100%;
+    height: 100%;
+}
+
+
 </style>
