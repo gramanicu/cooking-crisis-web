@@ -3,7 +3,7 @@
  */
 
 import axios from "axios"
-import { http_root } from "../../assets/constants/_constants"
+import { http_root } from "../assets/constants/_constants"
 
 const instance = axios.create({
     baseURL: http_root,
@@ -18,7 +18,7 @@ const instance = axios.create({
  */
 export async function getAccountData(jwt_acc) {
     try {
-        const res = await instance.get("users/status/", {
+        const res = await instance.get("users/account", {
             headers: {
                 Authorization: `Bearer ${jwt_acc}`,
             },

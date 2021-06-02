@@ -3,7 +3,7 @@
  */
 
 import axios from "axios"
-import { http_root } from "../../assets/constants/_constants"
+import { http_root } from "../assets/constants/_constants"
 
 const instance = axios.create({
     baseURL: http_root,
@@ -15,7 +15,7 @@ const instance = axios.create({
  * Get all the cards in the game
  * @returns The array of cards
  */
- export async function getUserStatus() {
+export async function getUserStatus() {
     try {
         const res = await instance.get(`cards/view`)
 
@@ -35,7 +35,7 @@ const instance = axios.create({
  * @param {String} card_Id The id of the card
  * @returns The array of cards
  */
- export async function getUserStatus(card_id) {
+export async function getUserStatus(card_id) {
     try {
         const res = await instance.get(`cards/view/${card_id}`)
 
