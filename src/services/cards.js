@@ -15,7 +15,7 @@ const instance = axios.create({
  * Get all the cards in the game
  * @returns The array of cards
  */
-export async function getUserStatus() {
+export async function getAllCards() {
     try {
         const res = await instance.get(`cards/view`)
 
@@ -35,7 +35,7 @@ export async function getUserStatus() {
  * @param {String} card_Id The id of the card
  * @returns The array of cards
  */
-export async function getUserStatus(card_id) {
+export async function getCard(card_id) {
     try {
         const res = await instance.get(`cards/view/${card_id}`)
 
