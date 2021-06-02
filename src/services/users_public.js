@@ -3,7 +3,7 @@
  */
 
 import axios from "axios"
-import { http_root } from '../assets/constants/_constants'
+import { http_root } from "../assets/constants/_constants"
 
 const instance = axios.create({
     baseURL: http_root,
@@ -19,6 +19,11 @@ const instance = axios.create({
 export async function getUserStatus(name) {
     try {
         const res = await instance.get(`users/status/${name}`)
+
+        if (res.data.res_status == "error") {
+            return 0
+        }
+
         return res.data.status
     } catch (err) {
         return 0
@@ -34,7 +39,11 @@ export async function getUserStatus(name) {
 export async function doesUserExist(name) {
     try {
         // If req fails, it will enter "catch"
-        await instance.get(`users/exists/${name}`)
+        const res = await instance.get(`users/exists/${name}`)
+
+        if (res.res_status == "error") {
+            return false
+        }
         return true
     } catch {
         return false
@@ -51,6 +60,10 @@ export async function doesUserExist(name) {
 export async function getAccessToken(refreshToken) {
     try {
         const res = await instance.get(`users/token/${refreshToken}`)
+
+        if (res.data.res_status == "error") {
+            return undefined
+        }
 
         return {
             jwt_access_token: res.data.jwt_access_token,
@@ -69,9 +82,12 @@ export async function getAccessToken(refreshToken) {
  */
 export async function activateAccount(activation_token) {
     try {
-        await instance.get(`users/token/${activateAccount}`)
+        const res = await instance.get(`users/activation/${activation_token}`)
+        if (res.data.res_status == "error") {
+            return false
+        }
         return true
-    } catch (err) {
+    } catch {
         return false
     }
 }
@@ -90,12 +106,16 @@ export async function signIn(username, password) {
             password: password,
         })
 
+        if (res.data.res_status == "error") {
+            return undefined
+        }
+
         return {
             jwt_access_token: res.data.jwt_access_token,
             jwt_refresh_token: res.data.jwt_refresh_token,
             access_expiry: res.data.access_expiry,
         }
-    } catch (err) {
+    } catch {
         return undefined
     }
 }
@@ -117,7 +137,7 @@ export async function signUp(username, email, password) {
         })
 
         return true
-    } catch (err) {
+    } catch {
         return false
     }
 }
