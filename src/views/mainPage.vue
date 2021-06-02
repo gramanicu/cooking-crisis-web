@@ -9,7 +9,16 @@
             <div class="friend-container">
                 <vuescroll :ops="ops">
                     <div class="friends" v-for="(friend, index) in friendList" :key="index">
-                        <h2 class="friend-info">{{friend.name}} <span :class="{ text_size: true, on: friend.status === 'online' , offline: friend.status === 'offline' , busy: friend.status === 'busy', in_game: friend.status === 'in game'}"> <v-icon small :class="{ text_size: true, on: friend.status === 'online' , offline: friend.status === 'offline' , busy: friend.status === 'busy', in_game: friend.status === 'in game'}" >mdi-checkbox-blank-circle </v-icon> {{friend.status}}</span></h2>
+                        <h2 class="friend-info">  <v-icon class="friend-icon" large>mdi-account-circle </v-icon>   {{friend.name}} <span :class="{ text_size: true, on: friend.status === 'online' , offline: friend.status === 'offline' , busy: friend.status === 'busy', in_game: friend.status === 'in game'}"> <v-icon small :class="{ text_size: true, on: friend.status === 'online' , offline: friend.status === 'offline' , busy: friend.status === 'busy', in_game: friend.status === 'in game'}" >mdi-checkbox-blank-circle </v-icon> {{friend.status}}</span></h2>
+                        <v-btn dark class="invite" plain> <v-icon medium>mdi-cheese</v-icon> challenge!</v-btn>
+                    </div>
+                </vuescroll>
+            </div>
+            <div class="game-container">
+                <h1 class="leaderboard-title">Leaderboard</h1>
+                <vuescroll :ops="ops">
+                    <div class="leaderboard" v-for="(person, index) in leaderBoard" :key="index">
+                        <h2 class="leaderboard-info">{{person.name}} with {{person.wins}} wins</h2>
                     </div>
                 </vuescroll>
             </div>
@@ -28,6 +37,39 @@ export default {
     },
     data() {
         return {
+            leaderBoard:[
+                {
+                    name: "JOHN",
+                    wins: 6
+                },
+                {
+                    name: "gosu",
+                    wins: 6
+                },
+                {
+                    name: "florica",
+                    wins: 6
+                },
+                {
+                    name: "JOHN",
+                    wins: 6
+                },
+                {
+                    name: "JOHN",
+                    wins: 6
+                },
+                {
+                    name: "yummi",
+                    wins: 6
+                },
+
+                {
+                    name: "carl",
+                    wins: 6
+                },
+            ],
+
+
             friendList: [
                 {
                     name:"Dan",
@@ -127,7 +169,7 @@ export default {
 //profile
 .profile-container {
     margin-top: 3%;
-    margin-left: 10%;
+    margin-left: 16%;
     width: 20%;
     height: 350px;
     background-color: $pink;
@@ -154,44 +196,61 @@ export default {
 //friends
 
 .friends {
+    display: flex;
     width: 100% !important;
     height: 60%;
 }
 .friend-info {
+    width: 100%;
     font-size: 18px;
     color: $white;
-    padding-top: 2%;
+    padding-top: 5%;
     padding-left: 10%;
 }
-
+.friend-icon {
+    color: inherit !important;
+    padding-right: 2%;
+}
 .friend-container {
     position: absolute;
     top: 5%;
-    right: 25%;
+    right: 16%;
     width: 30%;
     height: 350px;
     background-color:   #282C35;
     border-radius:  10% 0% 0% 0%;
 }
-.game-container {
-    top: 20%;
-    right: 22.8%;
+.invite {
+    margin-top: 5%;
     position: absolute;
-    width: 40%;
-    height: 505px;
-    background-color: #F9A602;
-    border-radius:  0 0 8% 0;
-    z-index: 1;
+    right: 0;
+    color: $white !important;
 }
-.info-container {
-    top: 6.7%;
-    right: 22.8%;
+
+//leaderboard
+
+.game-container {
+    top: 45%;
+    right: 33%;
     position: absolute;
-    width: 40%;
-    height: 500px;
-    background-color: $primary;
-    border-radius:   0 8%  0% 0;
-    z-index: 0;
+    width: 50%;
+    height: 305px;
+    background-color: #F9A602;
+    border-radius:  0 0 8% 8%;
+}
+.leaderboard-title {
+    text-align: center;
+    color: $white !important;
+    padding-top: 3%;
+}
+.leaderboard-info {
+    text-align: center;
+    color: $white !important;
+    padding-top: 4%;
+}
+
+.game-container .__vuescroll {
+    height: 70% !important;
 }
 
 
