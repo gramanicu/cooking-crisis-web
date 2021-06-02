@@ -22,3 +22,4 @@ export const user_status = Object.freeze({
 
 // The base route for the api calls
 export const http_root = "https://cooking-crisis-api-dev.herokuapp.com/api/v1/"
+export const socket_root = "https://cooking-crisis-api-dev.herokuapp.com"

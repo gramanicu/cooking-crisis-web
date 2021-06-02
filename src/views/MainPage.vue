@@ -2,8 +2,8 @@
     <div id="main">
         <div class="container">
             <div class="profile-container">
-                <h1 class="username-title" >{{username}}</h1>
-                <h2 class="wins-number">Wins: 0</h2>
+                <h1 class="username-title" >{{user_info.name}}</h1>
+                <h2 class="profile-elo-number">ELO: {{user_info.elo}}</h2>
                 <v-icon class="cute-icon" x-large color="black">mdi-account-circle </v-icon>
             </div>
             <div class="friend-container">
@@ -30,10 +30,46 @@
 
 
 <script>
-import vuescroll from 'vuescroll';
+import vuescroll from 'vuescroll'
+import { getAccountData } from "../services/users_private"
+import {getUserStatus, getAccessToken} from "../services/users_public"
+// import {} from "../services/cards"
+import {user_status} from "../assets/constants/_constants"
+import {getFriendList, sendFriendRequest} from "../services/friends"
+import * as io from "socket.io-client"
+import {socket_root} from "../assets/constants/_constants"
+
 export default {
     components: {
         vuescroll
+    },
+    created() {
+        getAccountData(localStorage.getItem("jwt_access_token")).then((data) => {
+            if(data != undefined) {
+                this.user_info.name = data.name;
+                this.user_info.email = data.email;
+                this.user_info.status = data.status;
+                this.user_info.elo = data.elo;
+                this.user_info.created_at = data.created_at;
+                this.reloadFriendList()
+            } else {
+                this.$router.push("/");
+            }
+        });
+
+        this.bkg_socket.on('connect', function () {
+            console.log("Connected!")
+            this.bkg_socket.emit("ping", Date.now())
+        }.bind(this))
+
+        this.bkg_socket.on('notification', function (not) {
+            console.log("Received a notification related to " + not.category)
+            console.log("The notification is: " + not.message)
+        }.bind(this))
+
+        this.bkg_socket.on('pong', function (time) {
+            console.log("Delay is " + (Date.now() - time) + "ms")
+        }.bind(this))
     },
     data() {
         return {
@@ -41,103 +77,30 @@ export default {
                 {
                     name: "JOHN",
                     wins: 6
-                },
-                {
-                    name: "gosu",
-                    wins: 6
-                },
-                {
-                    name: "florica",
-                    wins: 6
-                },
-                {
-                    name: "JOHN",
-                    wins: 6
-                },
-                {
-                    name: "JOHN",
-                    wins: 6
-                },
-                {
-                    name: "yummi",
-                    wins: 6
-                },
-
-                {
-                    name: "carl",
-                    wins: 6
-                },
+                }
             ],
 
 
-            friendList: [
-                {
-                    name:"Dan",
-                    status: "online",
-                },
-                {
-                    name:"Joe",
-                    status: "offline",
-                },
-                {
-                    name:"Queen",
-                    status: "busy",
-                },
-                {
-                    name:"Coco",
-                    status: "in game",
-                },
-                {
-                    name:"Dan",
-                    status: "online",
-                },
-                {
-                    name:"Joe",
-                    status: "offline",
-                },
-                {
-                    name:"Queen",
-                    status: "busy",
-                },
-                {
-                    name:"Coco",
-                    status: "in game",
-                },
-                {
-                    name:"Dan",
-                    status: "online",
-                },
-                {
-                    name:"Joe",
-                    status: "offline",
-                },
-                {
-                    name:"Queen",
-                    status: "busy",
-                },
-                {
-                    name:"Coco",
-                    status: "in game",
-                },
-                {
-                    name:"Dan",
-                    status: "online",
-                },
-                {
-                    name:"Joe",
-                    status: "offline",
-                },
-                {
-                    name:"Queen",
-                    status: "busy",
-                },
-                {
-                    name:"Coco",
-                    status: "in game",
-                },
-                
-            ],
-            username: "John Doe",
+            friendList:[],
+            user_info: {
+                name: "",
+                email: "",
+                status: 0,
+                elo: 0,
+                created_at: ""
+            },
+            bkg_socket: io(socket_root+"/backbone", {
+                path: "/sockets/",
+                auth: {
+                    token: localStorage.getItem("jwt_access_token")
+                }
+            }),
+            mch_socket: io(socket_root+"/match", {
+                path: "/sockets/",
+                auth: {
+                    token: localStorage.getItem("jwt_access_token")
+                }
+            }),
             ops: {
                 vuescroll: {},
                 scrollPanel: {},
@@ -152,7 +115,34 @@ export default {
         }
     },
     methods: {
-        
+        async sendFriendRequest(name) {
+            const res = await sendFriendRequest(localStorage.getItem("jwt_access_token"), name)
+            if(res == true) {
+                // Success
+            } else {
+                // Couldn't send request
+            }
+        },
+
+        async reloadFriendList() {
+            this.friendList = []
+            getFriendList(localStorage.getItem("jwt_access_token")).then((data) => {
+                if(data != undefined) {
+                    const keys = Object.keys(user_status);
+
+                    if(data.data.length) {
+                        data.data.forEach(async (element) => {
+                            this.friendList.push({
+                                name: element.name,
+                                status: keys[await getUserStatus(this.user_info.name)],
+                            })
+                        });
+                    }
+                } else {
+                    this.$router.push("/validate");
+                }
+            })
+        }
     },
 }
 </script>
@@ -181,7 +171,7 @@ export default {
     text-align: center;
     padding-top: 5%;
 }
-.wins-number {
+.profile-elo-number {
     color: $white;
     text-align: center;
     padding-top: 5%;

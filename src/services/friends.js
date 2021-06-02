@@ -3,7 +3,7 @@
  */
 
 import axios from "axios"
-import { http_root } from "../../assets/constants/_constants"
+import { http_root } from "../assets/constants/_constants"
 
 const instance = axios.create({
     baseURL: http_root,
@@ -43,14 +43,11 @@ export async function getFriendList(jwt_acc) {
  */
 export async function sendFriendRequest(jwt_acc, username) {
     try {
-        const res = await instance.post(
-            `friends/add/${username}`,
-            {
-                headers: {
-                    Authorization: `Bearer ${jwt_acc}`,
-                },
-            }
-        )
+        const res = await instance.post(`friends/add/${username}`, {
+            headers: {
+                Authorization: `Bearer ${jwt_acc}`,
+            },
+        })
 
         if (res.data.res_status == "error") {
             return false
@@ -71,14 +68,14 @@ export async function sendFriendRequest(jwt_acc, username) {
  * @returns If the operation was successful
  */
 export async function answerFriendRequest(jwt_acc, req_id, accept) {
-    const answer = accept ? "accept" : "deny";
+    const answer = accept ? "accept" : "deny"
 
     try {
         const res = await instance.put(
             "friends/answer",
             {
                 request_id: req_id,
-                answer: answer
+                answer: answer,
             },
             {
                 headers: {
@@ -121,8 +118,6 @@ export async function getFriendRequests(jwt_acc) {
     }
 }
 
-
-
 /**
  * DELETE ../friends/remove/:link_id
  * Remove a friend, using the "friendship id"
@@ -130,7 +125,7 @@ export async function getFriendRequests(jwt_acc) {
  * @param {String} link_id The id of the relationship
  * @returns If the operation was successful
  */
- export async function removeFriend(jwt_acc, link_id) {
+export async function removeFriend(jwt_acc, link_id) {
     try {
         const res = await instance.delete(`friends/remove/${link_id}`, {
             headers: {
@@ -147,5 +142,3 @@ export async function getFriendRequests(jwt_acc) {
         return false
     }
 }
-
-
