@@ -2,9 +2,7 @@
     <div id="main">
         <div class="container">
             <div class="navbar-container">
-
-                <div class="profile-container">
-                    
+                <div class="profile-container">         
                         <div class="card">
                             <div class="cardImg">
                                 <img src="https://www.w3schools.com/howto/img_avatar.png">
@@ -13,8 +11,7 @@
                                 <h3><b>{{user_info.name}}</b></h3> 
                                 <p>ELO:  {{user_info.elo}}</p> 
                             </div>
-                        </div>
-                    
+                        </div>           
                 </div>
 
                 <div class="notifications-container">
@@ -24,15 +21,12 @@
                 <div class="friend-container">
                     <vuescroll :ops="ops">
                         <div class="friend" v-for="(friend, index) in friendList" :key="index">
-
                             <div class="friendStatus">
                                 <h2 class="friend-info">  <v-icon class="friend-icon" large>mdi-account-circle </v-icon>   {{friend.name}} <span :class="{ text_size: true, on: friend.status === 'online' , offline: friend.status === 'offline' , busy: friend.status === 'busy', in_game: friend.status === 'in game'}"> <v-icon small :class="{ text_size: true, on: friend.status === 'online' , offline: friend.status === 'offline' , busy: friend.status === 'busy', in_game: friend.status === 'in game'}" >mdi-checkbox-blank-circle </v-icon> {{friend.status}}</span></h2>
                             </div>
-
                             <div class="friendActions">
-                                <v-btn dark class="invite" plain> <v-icon class="friendChallange-icon" medium>mdi-cheese</v-icon> challenge!</v-btn>
-                            </div>
-                            
+                                <v-btn v-if="friend.status === 'online'" dark class="invite" plain> <v-icon class="friendChallange-icon" medium>mdi-cheese</v-icon> challenge!</v-btn>
+                            </div>      
                         </div>
                     </vuescroll>
                 </div>
@@ -41,13 +35,14 @@
             <div class="pageContent-container">
                 <div class="addFriend">
                     <input  class="addFriendInput" type="text" placeholder="   Add friend...">
+                    <button>Add</button>
                 </div>
                 <div class="menu">
                     <div class="menuButtonGroup">
-                        <button class="menuButton">Account management</button>
-                        <button class="menuButton">Leaderboard</button>
-                        <button class="menuButton">Matchmacking</button>
-                        <button class="menuButton">About Game</button>
+                        <button class="menuButton" @click="openAccountManagement()">Account management</button>
+                        <button class="disabledMenuButton" >Leaderboard</button>
+                        <button class="disabledMenuButton" >Matchmaking</button>
+                        <button class="disabledMenuButton" >About Game</button>
                     </div>
                 </div>
             </div>
@@ -119,7 +114,20 @@ export default {
     data() {
         return {
             leaderBoard:[],
-            friendList:[],
+            friendList:[
+                {
+                    name: "Dave",
+                    status: "online",
+                },
+                {
+                    name: "Dave",
+                    status: "in game",
+                },
+                {
+                    name: "Dave",
+                    status: "offline",
+                },
+            ],
             user_info: {
                 name: "",
                 email: "",
@@ -154,6 +162,9 @@ export default {
         }
     },
     methods: {
+        openAccountManagement() {
+            this.$router.push("/account");
+        },
         async sendFriendRequest(name) {
             const res = await sendFriendRequest(localStorage.getItem("jwt_access_token"), name)
             if(res == true) {
@@ -270,7 +281,7 @@ export default {
     margin-top: 5%;
     margin-right: 5%;
     margin-left: 6%;
-    background-color: rgba(196, 188, 188, 0.39);
+    background-color: $gold;
     border-radius: 12% 0% 17% 0%;
     padding-top: 2%;
 }
@@ -288,7 +299,6 @@ export default {
 
 .friendChallange-icon {
     font-size: 1.3vw;
-
 }
 
 .friendActions button {
@@ -339,29 +349,32 @@ export default {
 
 .addFriend:focus {
     border: dotted rgba(224, 211, 211, 0.63);
+}
 
+.addFriendButton {
+    position: relative;
+    width: 20%;
+    background-color: $blue;
+    color: $white;
+    text-align: center;
+    color: rgba(167, 199, 202, 0.827);
+    margin-right: 30px;
+    margin-left: 30px;
+    display: block;
+    outline-width: 0;
+    font-size: 30px;
 }
 
 .addFriendInput {
     position: relative;
-    width: 90%;
+    width: 70%;
     height: 70%;
     font-size: 30px;
     color: rgba(167, 199, 202, 0.827);
-    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    font-family: 'Courier New', Courier, monospace;
     text-align: center;
     margin: auto;
     display: block;
-    cursor:  copy !important;
     outline-width: 0;
-    caret-color: rgb(233, 58, 140);
-
-
-}
-
-.addFriendInput:focus {
-    font-family: 'Courier New', Courier, monospace;
 }
 
 
@@ -370,14 +383,13 @@ export default {
 .menu {
     width: 80%;
     height: 85%;
-    background: rgba(167, 199, 202, 0.827);
+    background: $primary;
     margin-top: 5%;
     border-radius: 13%;
     display: flex;
     justify-content: center;
     align-items: center; 
     margin-left: 7%;
-
 }
 
 
@@ -385,20 +397,18 @@ export default {
     width: 70%;
     margin: auto;
     padding-top: 5%;
-
 }
 
-.menuButton {
+.menuButton, .disabledMenuButton {
     width: 100%;
     display: block;
-    background-color: rgba(240, 221, 226, 0.747);
+    background-color: $blue;
+    color: $white;
     font-size: 25px;
     margin-bottom: 11%;
     padding: 4%;
     border-radius: 5%;
-    font-family: 'Courier New', Courier, monospace;
     box-shadow: 5px 10px #888888;
-
 }
 
 .menuButton:hover {
@@ -416,7 +426,6 @@ export default {
     height: 20%;
     background-color: $pink;
     border-radius: 10%;
-
 }
 
 .profile-title {
@@ -440,7 +449,6 @@ export default {
 
 .profile-elo h2 {
     font-size: 80%;
-
 }
 
 .profile-picture {
@@ -486,17 +494,14 @@ export default {
 }
 
 .cardContainer h3 {
-    font-family: 'Courier New', Courier, monospace;
     font-size: 23px;
-    color: rgb(66, 52, 52);
+    color: $white;
 }
 
 .cardContainer p {
-    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     font-size: 12px;
-    color: rgb(0, 0, 0);
+    color: $white;
     margin-left: 13%;
-
 }
 
 .cardImg {
