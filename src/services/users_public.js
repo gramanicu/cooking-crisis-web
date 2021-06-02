@@ -3,9 +3,7 @@
  */
 
 import axios from "axios"
-import {
-    http_root
-} from "../assets/constants/_constants"
+import { http_root } from "../assets/constants/_constants"
 
 const instance = axios.create({
     baseURL: http_root,
@@ -43,10 +41,9 @@ export async function doesUserExist(name) {
         // If req fails, it will enter "catch"
         const res = await instance.get(`users/exists/${name}`)
 
-        if(res.res_status == "error") {
-            return false;
+        if (res.res_status == "error") {
+            return false
         }
-
         return true
     } catch {
         return false

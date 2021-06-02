@@ -8,8 +8,8 @@
             </div>
             <div class="infobox2" >
                 <h1 class="infoTitle fs-small-3"> Sign in</h1>
-                <v-text-field class="inputField" dark placeholder="Username" @input="clearFail" :rules="[validUsername]" required v-model="usernameValue"></v-text-field>
-                <v-text-field class="inputField" dark placeholder="Password" @input="clearFail"  type="password" :rules="[validPassword]" required v-model="passwordValue"></v-text-field>
+                <v-text-field class="inputField" tabindex="1" dark placeholder="Username" @input="clearFail" :rules="[validUsername]" required v-model="usernameValue"></v-text-field>
+                <v-text-field class="inputField" tabindex="2" dark placeholder="Password" @input="clearFail"  type="password" :rules="[validPassword]" required v-model="passwordValue"></v-text-field>
                 <v-btn dark class="loginButton" :loading="load" :disabled="p_invalid || u_invalid" @click="login()">login</v-btn>
                 <p class="signOutMessage">You dont have an account?</p>
                 <v-btn dark class="accountButton" @click="createAccount()" plain >create an account </v-btn>
@@ -33,8 +33,8 @@ export default {
         return {
             load: false,
             fail: false,
-            u_invalid: false,
-            p_invalid: false,
+            u_invalid: true,
+            p_invalid: true,
             usernameValue: "",
             passwordValue: ""
         }
@@ -101,10 +101,10 @@ export default {
             this.load = false;
         },
         createAccount() {
-            this.$router.push("/createaccount");
+            this.$router.push("/signup");
         },
         forgotPassword() {
-            this.$router.push("/forgotpassword");
+            this.$router.push("/forgot");
         }
     },
     destroy() {},
