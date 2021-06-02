@@ -27,22 +27,10 @@ export default {
     },
     mounted() {
     },
-    data() {
-        return {
-            usernameValue: "",
-            passwordValue: "",
-            emailValue: "",
-            isLogged: false,
-            accessTokenUser: "",
-            refTokenUser: "",
-            load: false,
-            fail: false, 
-        }
-    },
     methods: {
         async login() {
-            this.load = !this.load;
-            this.fail =  false;
+            this.load = true;
+            this.fail = false;
             try {
                 const response = await signIn(this.usernameValue, this.passwordValue)
 
@@ -54,15 +42,17 @@ export default {
                         // Redirect
                         this.$router.push("/main");
                     } else {
-                        // TODO - wrong data message
-                        this.fail = true;
+                        this.fail = true
                     }
+                } else {
+                    this.fail = true
                 }
             } catch (err) {
+                this.fail = true
                 throw new Error(err)
             }
 
-            this.load = !this.load;
+            this.load = false;
         },
         createAccount() {
             this.$router.push("/createaccount");
@@ -120,7 +110,6 @@ export default {
     position: relative;
     left: 10%;
     top: 7%;
-
 }
 
 .inputField {
